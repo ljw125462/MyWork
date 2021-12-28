@@ -1,0 +1,49 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sys?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+    # 连接池指定 springboot2.02版本默认使用HikariCP 此处要替换成Druid
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 初始化大小，最小，最大
+    initialSize: 1
+    minIdle: 3
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  # 是否缓存preparedStatement，打开PSCache，并且指定每个连接上PSCache的大小。官方建议MySQL下建议关闭，如果用SQL防火墙 建议打开
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+  sql:
+    init:
+      platform: mysql
+
+mybatis:
+  type-aliases-package: com.example.powermanager.model
+  mapper-locations: classpath:/mybatis-mappers/*
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+#baseInfo
+api-url: /api
+
+#token:
+#  expire:
+#    seconds: 7200
+#  jwtSecret: (XIAO:)_$^11244^%$_(WEI:)_@@++--(LAO:)_++++_.sds_(SHI:)
+
+server:
+  port: 8080

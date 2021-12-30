@@ -10,6 +10,8 @@ import com.example.powermanager.util.MD5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -38,6 +40,7 @@ public class UserController {
 
     @GetMapping("/list")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:user:query')")
     public Results<SysUser> getUsers(PageTableRequest request)
     {
         request.countOffset();
@@ -45,27 +48,31 @@ public class UserController {
     }
 
     @GetMapping("/add")
+    @PreAuthorize("hasAuthority('sys:user:add')")
     public String addUsers(Model model)
     {
-        model.addAttribute(new SysUser());
+        model.addAttribute("sysUser",new SysUser());
         return "user/user-add";
     }
 
-    @PostMapping("/add")
+    @PostMapping(value = "/add")
     @ResponseBody
-    public Results<SysUser> saveUsers(UserDto userDto,Integer roleId)
-    {
-        SysUser sysUser = null ;
-
+    @PreAuthorize("hasAuthority('sys:user:add')")
+    public Results<SysUser> saveUser(UserDto userDto, Integer roleId) {
+        SysUser sysUser = null;
+        sysUser = userService.getUser(userDto.getUsername());
+        if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
+            return Results.failure(ResponseCode.USERNAME_REPEAT.getCode(),ResponseCode.USERNAME_REPEAT.getMessage());
+        }
         sysUser = userService.getUserByPhone(userDto.getTelephone());
         if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
-            return Results.failure(ResponseCode.PHONE_REPEAT.getCode(), ResponseCode.PHONE_REPEAT.getMessage());
+            return Results.failure(ResponseCode.PHONE_REPEAT.getCode(),ResponseCode.PHONE_REPEAT.getMessage());
         }
 
         userDto.setStatus(1);
-        userDto.setPassword(MD5.crypt(userDto.getPassword()));
+        userDto.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+        //userDto.setPassword(MD5.crypt(userDto.getPassword()));
         return userService.save(userDto,roleId);
-
     }
 
     String pattern = "yyyy-MM-dd";
@@ -77,28 +84,32 @@ public class UserController {
     @GetMapping("/edit")
     public String addUsers(Model model,SysUser sysUser)
     {
-        model.addAttribute(userService.getUserById(sysUser.getId()));
+        model.addAttribute("sysUser",userService.getUserById(sysUser.getId()));
         return "user/user-edit";
     }
 
     @PostMapping("/edit")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:user:edit')")
     public Results<SysUser> upadteUsers(UserDto userDto,Integer roleId)
     {
-        SysUser sysUser = null ;
-
+        SysUser sysUser = null;
+        sysUser = userService.getUser(userDto.getUsername());
+        if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
+            return Results.failure(ResponseCode.USERNAME_REPEAT.getCode(),ResponseCode.USERNAME_REPEAT.getMessage());
+        }
         sysUser = userService.getUserByPhone(userDto.getTelephone());
         if(sysUser != null && !(sysUser.getId().equals(userDto.getId()))){
-            return Results.failure(ResponseCode.PHONE_REPEAT.getCode(), ResponseCode.PHONE_REPEAT.getMessage());
+            return Results.failure(ResponseCode.PHONE_REPEAT.getCode(),ResponseCode.PHONE_REPEAT.getMessage());
         }
-
         return userService.updateUser(userDto,roleId);
 
     }
 
     @GetMapping("/delete")
     @ResponseBody
-    public Results deleteUser(UserDto userDto) {
+    @PreAuthorize("hasAuthority('sys:user:del')")
+    public Results<SysUser> deleteUser(UserDto userDto) {
         int count = userService.deleteUser(userDto.getId());
         if(count > 0){
             return Results.success();
@@ -109,6 +120,7 @@ public class UserController {
 
     @GetMapping("/findUserByFuzzyUsername")
     @ResponseBody
+    @PreAuthorize("hasAuthority('sys:user:query')")
     public Results<SysUser> findUserByFuzzyUsername(PageTableRequest request, String username) {
         log.info("UserController.findUserByFuzzyUsername(): param ( request1 = " + request +" ,username = " + username+ ")");
         request.countOffset();

@@ -3,7 +3,7 @@
 <mapper namespace="com.example.powermanager.dao.RoleDao">
 
 	<insert id="saveRole" parameterType="com.example.powermanager.model.SysRole" flushCache="true"  useGeneratedKeys="true" keyProperty="id">
-		insert into sys_role(name, description, createTime, updateTime)
+		insert into sysr_ole(name, description, createTime, updateTime)
 		values
 		(#{name}, #{description}, now(), now())
 	</insert>

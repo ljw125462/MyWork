@@ -8,60 +8,52 @@
 </head>
 
 <body class="">
-    <div class="x-nav">
+<div class="x-nav">
           <span class="layui-breadcrumb">
             <a href="">首页</a>
             <a href="">角色</a>
             <a>
               <cite>角色列表</cite></a>
           </span>
-        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-            <i class="layui-icon" style="line-height:30px">ဂ</i></a>
-    </div>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
 
-    <div class="layui-fluid">
-        <div class="layui-row  layui-col-space15">
-            <div class="layui-col-md12">
-                <div class="layui-card">
-                    <div class="layui-card-body ">
-                        <form class="layui-form  layui-col-space5">
-                            <div class="layui-inline layui-show-xs-block">
-                                <input type="text" name="username"  placeholder="请输入角色名" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-inline layui-show-xs-block">
-                                <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                            </div>
-                        </form>
-                    </div>
+<div class="layui-fluid">
+    <div class="layui-row  layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form  layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="username"  placeholder="请输入角色名" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
 
-                    <div class="layui-card-header">
-                        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-                        <button class="layui-btn" onclick="xadmin.open('新增角色','/role/add')"><i class="layui-icon"></i>新增角色</button>
-                    </div>
+                <div class="layui-card-header">
+                    <button class="layui-btn layui-btn-danger" onclick="delAll()" permission="sys:role:del"><i class="layui-icon"></i>批量删除</button>
+                    <button class="layui-btn" onclick="xadmin.open('新增角色','/role/add')" permission="sys:role:add"><i class="layui-icon"></i>新增角色</button>
+                </div>
 
-                    <div class="layui-card-body ">
-                        <table class="layui-hide" id="table" lay-filter="member"></table>
-                    </div>
+                <div class="layui-card-body ">
+                    <table class="layui-hide" id="table" lay-filter="member"></table>
+                </div>
 
-                    <div class="layui-card-body ">
-                        <script type="text/html" id="barDemo">
-                            <a class="layui-btn layui-btn-xs" lay-event="edit" >编辑</a>
-                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" >删除</a>
-                        </script>
-                    </div>
+                <div class="layui-card-body ">
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission="sys:role:edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" permission="sys:role:del">删除</a>
+                    </script>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-<!--
-    <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so" id="contentSearchAdd">
-            <input type="text" name="username"  placeholder="角色名" autocomplete="off" class="layui-input">
-            <button class="layui-btn"  lay-submit="" lay-filter="sreach" permission="sys:role:query"><i class="layui-icon">&#xe615;</i></button>
-            <a class="layui-btn" onclick="x_admin_show('新增用户','/role/add')" permission="sys:role:add"><i class="layui-icon"></i>新增角色</a>
-        </form>
-    </div>-->
 <script>
 
     layui.use('table', function(){
@@ -143,6 +135,7 @@
             });
             return false;
         });
+        checkPermission()
     });
 </script>
 </body>

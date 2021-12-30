@@ -9,6 +9,7 @@ import com.example.powermanager.dto.RoleDto;
 import com.example.powermanager.model.SysRole;
 import com.example.powermanager.model.SysRoleUser;
 import com.example.powermanager.service.RoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -16,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @Service
+@Slf4j
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleDao roleDao;

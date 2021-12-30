@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class SysRole extends BaseEntity<Integer> {
 
     private static final long serialVersionUID = -6525908145032868837L;
